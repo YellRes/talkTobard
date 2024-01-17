@@ -22,14 +22,8 @@ export class AppController {
       email: string;
     },
   ): Promise<UserModel[]> {
-    const { email } = searchInfo;
-    return this.userService.users({
-      where: email
-        ? {
-            email,
-          }
-        : {},
-    });
+    // const { email } = searchInfo;
+    // return this.userService.users();
   }
 
   // 创建用户

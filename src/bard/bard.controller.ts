@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { BardService } from './bard.service';
 import { CreateBardDto } from './dto/create-bard.dto';
 import { UpdateBardDto } from './dto/update-bard.dto';
@@ -12,10 +20,10 @@ export class BardController {
     return this.bardService.create(createBardDto);
   }
 
-  @Get()
-  findAll() {
-    return this.bardService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.bardService.findAll();
+  // }
 
   @Get(':id')
   findOne(@Param('id') id: string) {

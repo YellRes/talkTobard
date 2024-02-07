@@ -51,15 +51,6 @@ export class UserController {
     });
 
     if (findUser) {
-      const { email, id } = findUser
-      const token = await this.jwtService.signAsync({
-        user: {
-          email,
-          id
-        }
-      })
-
-      res.setHeader('authorization', 'bearer' + token)
       return '登录成功'
     } else {
       return '登录失败'

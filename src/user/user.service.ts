@@ -1,6 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import * as crypto from 'crypto'
 import { User, Prisma } from '@prisma/client';
+import { JwtService } from '@nestjs/jwt'
 
 import { PrismaService } from '../prisma.service';
 import { Email } from '../../tools/email'
@@ -18,6 +19,9 @@ export class UserService {
   constructor(private prisma: PrismaService) {
     this.emailCommon = new Email()
   }
+
+  @Inject(JwtService)
+  private jwtService: JwtService
 
   async user(userId: Prisma.UserWhereUniqueInput): Promise<User | null> {
     return this.prisma.user.findUnique({
@@ -72,22 +76,39 @@ export class UserService {
   // 创建用户
   async createUser(data: Prisma.UserCreateInput){
     const { email, password } = data
-    const findUser = await this.prisma.user.findFirst({
-      where: {
-        email
-      } 
-    })
-    if (findUser) { 
-      throw new BadRequestException('用户已存在')
-    }
 
-    const user = new CreateUserDto()
-    user.password = md5(password)
-    user.email = email
- 
-    this.prisma.user.create({
-      data: user
-    });
+    try {
+      const findUser = await this.prisma.user.findFirst({
+        where: {
+          email
+        } 
+      })
+      if (findUser) { 
+        throw new BadRequestException('用户已存在')
+      }
+  
+      const user = new CreateUserDto()
+      user.password = md5(data.password)
+      user.email = email
+   
+      const createdUser = await this.prisma.user.create({
+        data: user
+      });
+  
+      const token = await this.jwtService.signAsync({
+        user: {
+          email: createdUser.email,
+        }
+      })
+      const { password, ...other } = createdUser
+  
+      return {
+        ...other,
+        token
+      }
+    } catch (e) {
+      throw e
+    }
   }
 
   // 用户登录

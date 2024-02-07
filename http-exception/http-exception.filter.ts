@@ -17,7 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // 用于接收主动发错的错误信息 
     const { message, code } = exception.getResponse() as any;
     response.status(status).json({
-      code: code || status,
+      statusCode: code || status,
       timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       path: request.url,
       error: 'Bad Request',

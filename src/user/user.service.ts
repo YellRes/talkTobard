@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { User, Prisma } from '@prisma/client';
-import { Email } from '../../tools/email'
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import * as crypto from 'crypto'
+import { User, Prisma } from '@prisma/client';
+
+import { PrismaService } from '../prisma.service';
+import { Email } from '../../tools/email'
+import { CreateUserDto } from './user.dto'
 
 function md5(str) {
   const hash = crypto.createHash('md5')
@@ -68,13 +70,42 @@ export class UserService {
   }
 
   // 创建用户
-  async createUser(data: Prisma.UserCreateInput): Promise<User> {
-    const { email } = data
-    const findUser = await this.prisma.user.findUnique({
+  async createUser(data: Prisma.UserCreateInput){
+    const { email, password } = data
+    const findUser = await this.prisma.user.findFirst({
       where: {
         email
       } 
     })
-    return this.prisma.user.create({ data });
+    if (findUser) { 
+      throw new BadRequestException('用户已存在')
+    }
+
+    const user = new CreateUserDto()
+    user.password = md5(password)
+    user.email = email
+ 
+    this.prisma.user.create({
+      data: user
+    });
+  }
+
+  // 用户登录
+  async login(data: Prisma.UserCreateInput): Promise<User> { 
+    const { email, password } = data
+
+    const findUser = await this.prisma.user.findFirst({
+      where: {
+        email
+      }
+    })
+    if (!findUser) { 
+      throw new BadRequestException('用户不存在')
+    }
+    if (findUser.password !== md5(password)) { 
+      throw new BadRequestException('密码错误')
+    }
+
+    return findUser
   }
 }

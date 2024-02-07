@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt'
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserService } from './user/user.service';
@@ -7,7 +8,15 @@ import { BardModule } from './bard/bard.module';
 import { UserModule } from './user/user.module'
 
 @Module({
-  imports: [BardModule, UserModule],
+  imports: [BardModule, UserModule,
+    JwtModule.register({
+      global: true,
+      secret: 'kkk',
+      signOptions: {
+        expiresIn: '7d'
+      }
+    })
+  ],
   controllers: [AppController],
   providers: [AppService, UserService, PrismaService],
 })

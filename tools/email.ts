@@ -33,9 +33,11 @@ export class Email {
         // 5分钟后失效
         this.invalidateEmailCode({ email })
 
+
         this.transporter.sendMail(options, (err, info) => { 
             if (err) {
-                console.log(err, '邮件发送失败')
+
+                throw new BadRequestException('邮件发送失败')
             } else {
                 console.log('邮件发送成功')
                 console.log(info)
@@ -45,7 +47,7 @@ export class Email {
 
     verify({ email, code }) { 
         console.log(email, code)
-        if (!this.verifyCodeMap.get(email)) {
+        if (!this.verifyCodeMap.has(email)) {
             throw new BadRequestException('email不正确，请校验')
         }
 

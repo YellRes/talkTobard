@@ -11,9 +11,14 @@ export class CreateUserDto {
 
   @IsNotEmpty({ message: '邮箱不能为空' })
   @IsEmail({}, { message: '请输入有效的邮箱地址' })
-    email: string;
+  email: string;
     
 
-    gender: boolean
-    age: number
+  gender: boolean
+  age: number
+}
+
+export class EmailDto {
+  @IsEmail({}, { message: '请输入有效的邮箱地址' })
+  email: string;
 }

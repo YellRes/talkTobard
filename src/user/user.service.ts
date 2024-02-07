@@ -2,6 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { User, Prisma } from '@prisma/client';
 import { Email } from '../../tools/email'
+import * as crypto from 'crypto'
+
+function md5(str) {
+  const hash = crypto.createHash('md5')
+  hash.update(str)
+  return hash.digest('hex')
+}
 
 @Injectable()
 export class UserService {
@@ -25,10 +32,6 @@ export class UserService {
   }): Promise<User[]> {
     const { skip, take, cursor, where, orderBy } = params;
     return this.prisma.user.findMany({ skip, take, cursor, where, orderBy });
-  }
-
-  async createUser(data:  Prisma.UserCreateInput): Promise<User> {
-    return this.prisma.user.create({ data });
   }
 
   async updateUser(params: {
@@ -62,5 +65,16 @@ export class UserService {
     return this.emailCommon.verify({
       email, code
     })
+  }
+
+  // 创建用户
+  async createUser(data: Prisma.UserCreateInput): Promise<User> {
+    const { email } = data
+    const findUser = await this.prisma.user.findUnique({
+      where: {
+        email
+      } 
+    })
+    return this.prisma.user.create({ data });
   }
 }

@@ -30,3 +30,10 @@ export class LoginDto {
   @IsNotEmpty({ message: '邮箱不能为空' })
   password: string
 }
+
+export class updateUserDto {
+  name: string;
+  email: string;
+  @IsNotEmpty({ message: 'id不能为空' })
+  id: number;
+}

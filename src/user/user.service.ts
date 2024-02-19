@@ -40,15 +40,18 @@ export class UserService {
     return this.prisma.user.findMany({ skip, take, cursor, where, orderBy });
   }
 
+  // 更新用户信息
   async updateUser(params: {
     where: Prisma.UserWhereUniqueInput;
     data: Prisma.UserUpdateInput;
-  }): Promise<User> {
+  }): Promise<Partial<User>> {
     const { where, data } = params;
-    return this.prisma.user.update({
+    const { password, ...other } = await this.prisma.user.update({
       data,
       where,
     });
+
+    return other
   }
 
   async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
@@ -112,7 +115,7 @@ export class UserService {
   }
 
   // 用户登录
-  async login(data: Prisma.UserCreateInput): Promise<User> { 
+  async login(data: Prisma.UserCreateInput): Promise<User & Record<string, any>> {
     const { email, password } = data
 
     const findUser = await this.prisma.user.findFirst({
@@ -127,6 +130,22 @@ export class UserService {
       throw new BadRequestException('密码错误')
     }
 
-    return findUser
+    const token = await this.jwtService.signAsync({
+      user: {
+        email,
+      }
+    })
+
+    delete findUser.password
+
+    return {
+      ...findUser,
+      token
+    }
+  }
+
+  // 获取所有用户
+  async getAllUser(): Promise<User[]> { 
+    return this.prisma.user.findMany()
   }
 }

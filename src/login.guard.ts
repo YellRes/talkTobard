@@ -13,7 +13,6 @@ export class LoginGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request: Request = context.switchToHttp().getRequest()
-
     const authorization = request.header('authorization') || ''
     const bearer = authorization.split(' ')
     if (!bearer || bearer.length < 2) { 

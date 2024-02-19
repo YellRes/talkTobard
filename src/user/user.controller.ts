@@ -3,7 +3,7 @@ import { Controller, Res, Post, Get, Body, Query, Inject, UseGuards } from '@nes
 import { Response } from 'express'
 import { JwtService } from '@nestjs/jwt'
 
-import { CreateUserDto, EmailDto } from './user.dto';
+import { CreateUserDto, EmailDto, updateUserDto } from './user.dto';
 import { UserService } from './user.service'
 import { LoginGuard } from '../login.guard'
 
@@ -51,7 +51,7 @@ export class UserController {
     });
 
     if (findUser) {
-      return '登录成功'
+      return findUser
     } else {
       return '登录失败'
     }
@@ -62,5 +62,27 @@ export class UserController {
   @UseGuards(LoginGuard)
   async getUserInfo() { 
     return 'getUserInfo'
+  }
+
+  // 查询所有用户
+  @Get('getAllUser')
+  async getAllUser() { 
+    return await this.userService.getAllUser()
+  }
+
+  // 更新用户信息
+  @Post('updateUser')
+  @UseGuards(LoginGuard)
+  async updateUser(@Body() userData: updateUserDto) { 
+    const { email, name, id } = userData
+    return await this.userService.updateUser({
+      data: {
+        email,
+        name
+      },
+      where: {
+        id
+      }
+    })
   }
 }

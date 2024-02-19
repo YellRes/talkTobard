@@ -6,6 +6,7 @@ import { UserService } from './user/user.service';
 import { PrismaService } from './prisma.service';
 import { BardModule } from './bard/bard.module';
 import { UserModule } from './user/user.module'
+import { HistoryModule } from './history/history.module';
 
 @Module({
   imports: [BardModule, UserModule,
@@ -15,7 +16,8 @@ import { UserModule } from './user/user.module'
       signOptions: {
         expiresIn: '7d'
       }
-    })
+    }),
+    HistoryModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService, PrismaService],

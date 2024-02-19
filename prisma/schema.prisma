@@ -22,7 +22,19 @@ model User {
 
 model History {
   id Int @default(autoincrement()) @id
-  content String
   author User @relation(fields: [authorId], references: [id])
   authorId Int
+  contents HistoryItem[]
 }
+
+model HistoryItem {
+  id  Int @default(autoincrement()) @id
+  history History @relation(fields: [historyId], references: [id])
+  historyId Int
+  role String
+  parts String
+}
+
+
+
+

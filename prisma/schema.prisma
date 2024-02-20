@@ -18,13 +18,18 @@ model User {
   gender Boolean?
   email String @unique
   histories History[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model History {
   id Int @default(autoincrement()) @id
-  author User @relation(fields: [authorId], references: [id])
-  authorId Int
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  title String @default("")
   contents HistoryItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model HistoryItem {
@@ -33,6 +38,8 @@ model HistoryItem {
   historyId Int
   role String
   parts String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 

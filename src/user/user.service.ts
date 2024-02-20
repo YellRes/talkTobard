@@ -146,6 +146,6 @@ export class UserService {
 
   // 获取所有用户
   async getAllUser(): Promise<User[]> { 
-    return this.prisma.user.findMany()
+    return await this.prisma.user.findMany()
   }
 }

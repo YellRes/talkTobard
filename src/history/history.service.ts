@@ -23,7 +23,14 @@ export class HistoryService {
     // 创建history
     async createHistory(historyData: HistoryDto) { 
         try {
-            await this.prisma.history.create({
+            let isExist = await this.prisma.history.findFirst({
+                where: {
+                    title: historyData.title
+                }
+            })
+
+            if (isExist) return
+            const res = await this.prisma.history.create({
                 data: {
                     userId: historyData.userId,
                     title: historyData.title
@@ -38,6 +45,7 @@ export class HistoryService {
                     }
                 })
             }))
+            return res
         } catch (e) {
             console.log(e)
         }

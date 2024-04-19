@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@main
+        uses: actions/checkout@v2
 
       - name: Copy files to server
         uses: appleboy/scp-action@master
@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           source: './'
-          target: /home/server/talkToBard
+          target: /home/server/talkToBard/
 
       - name: SHH to server and restart application
         uses: appleboy/ssh-action@master
@@ -29,6 +29,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            cd /home/server/talkToBard
+            cd /home/server/talkToBard/
             docker build -t talkToBard:v1 .
             docker run -it --name=talkToBard:v1 talkToBard 3000:3000

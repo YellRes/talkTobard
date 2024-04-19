@@ -9,10 +9,11 @@ import { APP_PIPE } from '@nestjs/core';
 
 @Module({
   controllers: [UserController],
-  providers: [UserService, PrismaService, {
-    provide: APP_PIPE,
-    useClass: ValidationPipe,
-  },
+  providers: [UserService, PrismaService,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
   ],
 })
 export class UserModule {}

@@ -7,7 +7,7 @@ export class UploadController {
     @UseInterceptors(FilesInterceptor('files', 20, {
         dest: 'uploadImg'
     }))
-    uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>, @Body() body) { 
+    uploadFiles(@UploadedFiles() files: Array<any>, @Body() body) { 
         console.log(files)
         console.log(body)
     }

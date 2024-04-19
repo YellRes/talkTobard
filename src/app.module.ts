@@ -7,6 +7,8 @@ import { PrismaService } from './prisma.service';
 import { BardModule } from './bard/bard.module';
 import { UserModule } from './user/user.module'
 import { HistoryModule } from './history/history.module';
+import { PageModule } from './lego/page/page.module'
+
 
 @Module({
   imports: [BardModule, UserModule,
@@ -17,7 +19,8 @@ import { HistoryModule } from './history/history.module';
         expiresIn: '7d'
       }
     }),
-    HistoryModule
+    HistoryModule,
+    PageModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService, PrismaService],

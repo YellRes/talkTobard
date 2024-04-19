@@ -1,0 +1,24 @@
+version: "3"
+services:
+  nestdemo1:
+    container_name: nestdemo1
+    build: 
+      context: ./
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysqldb
+    env_file:
+      - ./.env
+    environment:
+      - DATABASE_URL="mysql://root:ztr321123!Z@120.27.131.228:3306/talkToBard"
+
+  mysqldb:
+    image: mysql
+    container_name: mysqldb
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - 3306:3306

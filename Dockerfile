@@ -17,11 +17,6 @@ RUN npm run build
 FROM node:16.18.0-alpine
 WORKDIR /home/app
 COPY --from=builder /home/app/. .
-# COPY --from=builder /home/app/node_modules ./node_modules
-# COPY --from=builder /home/app/packge*.json ./
-# COPY --from=builder /home/app/.env ./
-# COPY --from=builder /home/app/dist ./dist
-# COPY --from=builder /home/app/prisma ./prisma
 RUN npx prisma generate
 RUN npx prisma migrate deploy
 
